@@ -34,7 +34,14 @@ RUN set -x \
 	&& rm -rf "$GNUPGHOME" /usr/local/bin/gosu.asc \
 	&& chmod +x /usr/local/bin/gosu \
 	&& gosu nobody true \
-	&& apt-get purge -y --auto-remove ca-certificates wget
+	&& apt-get purge -y --auto-remove ca-certificates wget \
+	##add R related package
+        && sudo apt install dirmngr apt-transport-https ca-certificates software-properties-common gnupg2 \
+	&& sudo apt-key adv --keyserver keys.gnupg.net --recv-key 'E19F5F87128899B192B1A2C2AD5F960A256A04AF'\
+	&& sudo add-apt-repository 'deb https://cloud.r-project.org/bin/linux/debian stretch-cran35/' \
+	&& sudo apt update \
+        && sudo apt install r-base \
+	&& sudo apt install build-essential
 
 # make the "en_US.UTF-8" locale so postgres will be utf-8 enabled by default
 RUN set -eux; \
